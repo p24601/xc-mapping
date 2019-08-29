@@ -1,0 +1,63 @@
+function this=estimateMappingParameters(this,distanceMeasure,numOfThreads,verbose,modelMatName,currID)
+%main function for the estimation of the optimal mapping
+%%%%%%%%%%%%%%%%%
+if nargin < 6
+    currID = '';
+    if nargin < 5
+        modelMatName = '';
+        if nargin < 4
+            verbose = true;
+            if nargin < 3
+                numOfThreads=1;
+            end
+        end
+    end
+end
+
+
+%extraParamStruct.distanceMeasure=distanceMeasure;
+%used to exclude outliers in multi-user optimisation
+outliersFraction=0.1;
+
+
+
+
+
+%MOD FOR PARFOR
+subMapNames = this.subMapNames;
+
+subMapArray = cell(length(subMapNames),1);
+
+for ii = 1:length(subMapNames)
+    subMapArray{ii} = this.subMaps.(subMapNames{ii});
+end
+subMapOut = cell(length(subMapNames),1);
+
+
+%don't open a pool, if it is not opened already
+ps = parallel.Settings;
+ps.Pool.AutoCreate = false;
+
+auxLen = length(subMapNames);
+%estimating map for each individual feature independently of each other.
+for ii = 1:length(subMapNames)
+    tic
+    if verbose
+        disp(['    Currently optimizing for distribution: ', subMapNames{ii},'. (' int2str(ii) ,'/', int2str(auxLen)  ')']);
+    end
+    subMap = subMapArray{ii};
+    
+    subMapOut{ii} = subMap.subMapEstimation(numOfThreads,verbose,outliersFraction,distanceMeasure,modelMatName,currID);  
+end
+
+
+for ii = 1:length(subMapNames)
+    this.subMaps.(subMapNames{ii}) = subMapOut{ii};
+end
+%END MOD FOR PARFOR
+
+
+
+%set mapped features
+this=this.transformSourceDistributions();
+end

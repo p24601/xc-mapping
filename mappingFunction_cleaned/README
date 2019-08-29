@@ -1,0 +1,9 @@
+Code for estimation of mapping function as defined in:
+
+"When Your Fitness Tracker Betrays You: Quantifying the Predictability of Biometric Features Across Contexts",  Simon Eberz, Giulio Lovisotto, Andrea Patanè, Marta Kwiatkowska, Vincent Lenders, Ivan Martinovic.
+
+
+The code is currently set for running an example on the touch screen data (raw data can be found at: https://ora.ox.ac.uk/objects/uuid:0175c157-2c9b-47d0-aa77-febaf07fca71)
+
+Feel free to report any bug or ask any question about the code at: andrea.patane@cs.ox.ac.uk
+
